@@ -34,11 +34,11 @@ object Constants {
   val DEFAULT_FM_PARALLELISM = FlatMapParallelism(5)
   val DEFAULT_FM_STORM_METRICS = FlatMapStormMetrics(None)
   val DEFAULT_FM_CACHE = CacheSize(0)
-  val DEFAULT_SINK_PARALLELISM = SinkParallelism(5)
+  val DEFAULT_SUMMER_PARALLELISM = SummerParallelism(5)
   val DEFAULT_ONLINE_SUCCESS_HANDLER = OnlineSuccessHandler(_ => {})
   val DEFAULT_ONLINE_EXCEPTION_HANDLER = OnlineExceptionHandler(Map.empty)
-  val DEFAULT_SINK_CACHE = CacheSize(0)
-  val DEFAULT_SINK_STORM_METRICS = SinkStormMetrics(None)
+  val DEFAULT_SUMMER_CACHE = CacheSize(0)
+  val DEFAULT_SUMMER_STORM_METRICS = SummerStormMetrics(None)
   val DEFAULT_MONOID_IS_COMMUTATIVE = MonoidIsCommutative.default
   val DEFAULT_MAX_WAITING_FUTURES = MaxWaitingFutures(10)
 }

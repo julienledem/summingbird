@@ -215,14 +215,14 @@ abstract class Storm(options: Map[String, Options], transformConfig: Summingbird
       supplier,
       getOrElse(stormDag, node, DEFAULT_ONLINE_SUCCESS_HANDLER),
       getOrElse(stormDag, node, DEFAULT_ONLINE_EXCEPTION_HANDLER),
-      getOrElse(stormDag, node, DEFAULT_SINK_CACHE),
-      getOrElse(stormDag, node, DEFAULT_SINK_STORM_METRICS),
+      getOrElse(stormDag, node, DEFAULT_SUMMER_CACHE),
+      getOrElse(stormDag, node, DEFAULT_SUMMER_STORM_METRICS),
       getOrElse(stormDag, node, DEFAULT_MAX_WAITING_FUTURES),
       getOrElse(stormDag, node, IncludeSuccessHandler.default),
       anchorTuples,
       stormDag.dependenciesOf(node).size > 0)
 
-    val parallelism = getOrElse(stormDag, node, DEFAULT_SINK_PARALLELISM).parHint
+    val parallelism = getOrElse(stormDag, node, DEFAULT_SUMMER_PARALLELISM).parHint
     val declarer =
       topologyBuilder.setBolt(
         nodeName,
