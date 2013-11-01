@@ -17,7 +17,7 @@ limitations under the License.
 package com.twitter.summingbird.storm
 
 import com.twitter.summingbird.option.MonoidIsCommutative
-import com.twitter.summingbird.storm.option.{SpoutParallelism,FlatMapParallelism, FlatMapStormMetrics, SinkParallelism, OnlineSuccessHandler, OnlineExceptionHandler, SinkStormMetrics, MaxWaitingFutures}
+import com.twitter.summingbird.storm.option.{CacheSize => DEPCacheSize, _ }
 import com.twitter.summingbird.option._
 
 object Constants {
@@ -30,6 +30,7 @@ object Constants {
   val GROUP_BY_SUM = "groupBySum"
 
   val DEFAULT_SPOUT_PARALLELISM = SpoutParallelism(1)
+  val DEFAULT_SPOUT_STORM_METRICS = SpoutStormMetrics(None)
   val DEFAULT_FM_PARALLELISM = FlatMapParallelism(5)
   val DEFAULT_FM_STORM_METRICS = FlatMapStormMetrics(None)
   val DEFAULT_FM_CACHE = CacheSize(0)
