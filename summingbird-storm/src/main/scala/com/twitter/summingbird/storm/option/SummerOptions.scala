@@ -53,6 +53,7 @@ object IncludeSuccessHandler {
 
 case class OnlineExceptionHandler(handlerFn: PartialFunction[Throwable, Unit])
 
+case class EnableSummerStoreMetrics(get: Boolean)
 
 /**
   * See FlatMapOptions.scala for an explanation.

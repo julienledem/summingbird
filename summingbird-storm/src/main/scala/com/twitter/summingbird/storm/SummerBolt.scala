@@ -18,6 +18,7 @@ package com.twitter.summingbird.storm
 
 import backtype.storm.task.{OutputCollector, TopologyContext}
 import backtype.storm.tuple.{Tuple, Values, Fields}
+import backtype.storm.metric.api.CountMetric
 import com.twitter.algebird.{Monoid, SummingQueue}
 import com.twitter.summingbird.online.Externalizer
 import com.twitter.storehaus.algebra.MergeableStore
@@ -25,8 +26,9 @@ import com.twitter.summingbird.batch.{BatchID, Timestamp}
 import com.twitter.summingbird.storm.option._
 import com.twitter.summingbird.option.CacheSize
 import com.twitter.summingbird.online.FutureQueue
+import com.twitter.summingbird.storm.option.EnableSummerStoreMetrics
 
-import com.twitter.util.{Await, Future}
+import com.twitter.util.{Await, Future, Promise}
 import java.util.{ Map => JMap }
 
 /**
@@ -59,12 +61,25 @@ class SummerBolt[Key, Value: Monoid](
   metrics: SummerStormMetrics,
   maxWaitingFutures: MaxWaitingFutures,
   includeSuccessHandler: IncludeSuccessHandler,
+  nodeName: String,
+  enableSummerStoreMetrics: EnableSummerStoreMetrics,
   anchor: AnchorTuples,
   shouldEmit: Boolean) extends BaseBolt(metrics.metrics) {
   import Constants._
 
   val storeBox = Externalizer(storeSupplier)
-  lazy val store = storeBox.get.apply
+
+  private def storeDecider = {
+    val store = storeBox.get.apply
+    if(enableSummerStoreMetrics.get) {
+        StoreMetrics.getStatStore(nodeName, metricSrc, store)
+      } else {
+        store
+      }
+  }
+
+  lazy val metricSrc = new Promise[Map[String, CountMetric]]
+  lazy val store = storeDecider
 
   // See MaxWaitingFutures for a todo around removing this.
   lazy val cacheCount = cacheSize.size
@@ -81,6 +96,8 @@ class SummerBolt[Key, Value: Monoid](
   override def prepare(
     conf: JMap[_,_], context: TopologyContext, oc: OutputCollector) {
     super.prepare(conf, context, oc)
+
+    StoreMetrics.deliverMetrics(context, enableSummerStoreMetrics, nodeName, metricSrc)
     // see IncludeSuccessHandler for why this is needed
     successHandlerOpt = if (includeSuccessHandler.get)
       Some(successHandlerBox.get)

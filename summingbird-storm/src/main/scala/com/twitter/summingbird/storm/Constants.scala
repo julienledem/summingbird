@@ -41,4 +41,5 @@ object Constants {
   val DEFAULT_SUMMER_STORM_METRICS = SummerStormMetrics(None)
   val DEFAULT_MONOID_IS_COMMUTATIVE = MonoidIsCommutative.default
   val DEFAULT_MAX_WAITING_FUTURES = MaxWaitingFutures(10)
+  val DEFAULT_ENABLE_SUMMER_STORE_METRICS = EnableSummerStoreMetrics(false)
 }

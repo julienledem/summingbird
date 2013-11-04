@@ -167,7 +167,7 @@ abstract class Storm(options: Map[String, Options], transformConfig: Summingbird
           metrics,
           anchorTuples)(summerProducer.monoid.asInstanceOf[Monoid[Any]], summerProducer.store.batcher)
       case None =>
-        new IntermediateFlatMapBolt(operation, metrics, anchorTuples, stormDag.dependenciesOf(node).size > 0)
+        new IntermediateFlatMapBolt(operation, metrics, anchorTuples, stormDag.dependantsOf(node).size > 0)
     }
 
     val parallelism = getOrElse(stormDag, node, DEFAULT_FM_PARALLELISM).parHint
@@ -219,8 +219,10 @@ abstract class Storm(options: Map[String, Options], transformConfig: Summingbird
       getOrElse(stormDag, node, DEFAULT_SUMMER_STORM_METRICS),
       getOrElse(stormDag, node, DEFAULT_MAX_WAITING_FUTURES),
       getOrElse(stormDag, node, IncludeSuccessHandler.default),
+      nodeName,
+      getOrElse(stormDag, node, DEFAULT_ENABLE_SUMMER_STORE_METRICS),
       anchorTuples,
-      stormDag.dependenciesOf(node).size > 0)
+      stormDag.dependantsOf(node).size > 0)
 
     val parallelism = getOrElse(stormDag, node, DEFAULT_SUMMER_PARALLELISM).parHint
     val declarer =
