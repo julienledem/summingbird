@@ -116,7 +116,8 @@ object SummingbirdBuild extends Build {
     summingbirdScalding,
     summingbirdBuilder,
     summingbirdChill,
-    summingbirdExample
+    summingbirdExample,
+    summingbirdSpark
   )
 
   val dfsDatastoresVersion = "1.3.4"
@@ -127,6 +128,7 @@ object SummingbirdBuild extends Build {
   val utilVersion = "6.3.8"
   val chillVersion = "0.3.5"
   val tormentaVersion = "0.7.0"
+  val sparkVersion = "0.8.1-incubating"
 
   lazy val slf4jVersion = "1.6.6"
 
@@ -236,6 +238,20 @@ object SummingbirdBuild extends Build {
     summingbirdChill,
     summingbirdBatch
   )
+  
+  lazy val summingbirdSpark = module("spark").settings(
+    libraryDependencies ++= Seq(
+      "org.apache.spark" % "spark-core_2.9.3" % sparkVersion,
+      "org.apache.spark" % "spark-repl_2.9.3" % sparkVersion,
+      "org.apache.spark" % "spark-examples_2.9.3" % sparkVersion,
+      "org.apache.spark" % "spark-mllib_2.9.3" % sparkVersion
+    )
+  ).dependsOn(
+    summingbirdCore % "test->test;compile->compile",
+    summingbirdChill,
+    summingbirdBatch
+  )
+
 
   lazy val summingbirdBuilder = module("builder").settings(
     libraryDependencies ++= Seq(
